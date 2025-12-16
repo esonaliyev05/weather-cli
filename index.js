@@ -20,7 +20,8 @@ const saveToken = async token => {
 
 const startCLI = () => {
     const args = getArgs(process.argv);
-    console.log(args);
+    console.log(process.env);
+
 
     if (args.h) {
         printHelp();
@@ -31,7 +32,7 @@ const startCLI = () => {
     if (args.t) {
         saveKeyValue("token" , args.t)
     }
-    getWeather('uzbekistan')
+    getWeather( process.env.CITY ??  'uzbekistan')
 }
 
 startCLI();

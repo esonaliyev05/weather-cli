@@ -2,7 +2,7 @@ import axios from "axios";
 import { TOKEN_DICTIONARY , getKeyValue } from "./storage.service.js";
 
 const getWeather = async (city) => {
-  const token = await getKeyValue(TOKEN_DICTIONARY.token);
+  const token = process.env.TOKEN ?? await getKeyValue(TOKEN_DICTIONARY.token);
   if(!token) {
     throw new Error("API doesn't exist, -t [API_KEY] for saving token ");
   }
@@ -17,7 +17,7 @@ const getWeather = async (city) => {
 
 
   })
-   
+   console.log(data);
   return data
 
 //   const url = new URL(`https://api.openweathermap.org/data/2.5/weather?q=Tashkent&appid=a2c96b26f36e0755f0755aebe9e656b3`);
