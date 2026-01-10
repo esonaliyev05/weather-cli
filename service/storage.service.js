@@ -1,17 +1,14 @@
-import os from "os";
-import path from "path";
-import fs from "fs";
+import os from 'os';
+import path from 'path';
+import fs from 'fs';
 
-// Fayl yo'li
-const filePath = path.join(os.homedir(), "weather-data.json");
+const filePath = path.join(os.homedir(), 'weather-data.json');
 
-// Token va city uchun lug'at
 export const TOKEN_DICTIONARY = {
-  token: "token",
-  city: "city"
+  token: 'token',
+  city: 'city'
 };
 
-// Fayl mavjudligini tekshiruvchi funksiya
 const isExist = async (path) => {
   try {
     await fs.promises.stat(path);
@@ -21,23 +18,21 @@ const isExist = async (path) => {
   }
 };
 
-// Kalit-qiymatni saqlash funksiyasi
 export const saveKeyValue = async (key, value) => {
   let data = {};
 
   if (await isExist(filePath)) {
-    const file = await fs.promises.readFile(filePath, "utf-8");
+    const file = await fs.promises.readFile(filePath, 'utf-8');
     data = JSON.parse(file);
   }
 
   data[key] = value;
-  await fs.promises.writeFile(filePath, JSON.stringify(data));
+  await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2));
 };
 
-// Kalit bo'yicha qiymatni olish funksiyasi
 export const getKeyValue = async (key) => {
   if (await isExist(filePath)) {
-    const file = await fs.promises.readFile(filePath, "utf-8");
+    const file = await fs.promises.readFile(filePath, 'utf-8');
     const data = JSON.parse(file);
     return data[key];
   }
