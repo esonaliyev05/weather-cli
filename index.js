@@ -1,5 +1,5 @@
 import getArgs from './helpers/args.js';
-import { getWeather } from './service/api.service.js';
+import { getWeather, getIcons } from './service/api.service.js';
 import logService from './service/log.service.js';
 import {
   saveKeyValue,
@@ -7,7 +7,7 @@ import {
   getKeyValue
 } from './service/storage.service.js';
 
-const { printError, printSuccess, printHelp } = logService;
+const { printError, printSuccess, printHelp, printWeather } = logService;
 
 // TOKEN saqlash
 const saveToken = async (token) => {
@@ -17,7 +17,7 @@ const saveToken = async (token) => {
 
   try {
     await saveKeyValue(TOKEN_DICTIONARY.token, token);
-    printSuccess("Token was saved");
+    printSuccess('Token was saved');
   } catch (error) {
     printError(error.message);
   }
@@ -31,7 +31,7 @@ const saveCity = async (city) => {
 
   try {
     await saveKeyValue(TOKEN_DICTIONARY.city, city);
-    printSuccess("City was saved");
+    printSuccess('City was saved');
   } catch (error) {
     printError(error.message);
   }
@@ -40,13 +40,14 @@ const saveCity = async (city) => {
 // WEATHER olish
 const getForcast = async () => {
   try {
-    const city = 
+    const city =
       process.env.CITY ??
       await getKeyValue(TOKEN_DICTIONARY.city) ??
       'Uzbekistan';
 
     const response = await getWeather(city);
-    console.log(response);
+
+    printWeather(response, getIcons(response.weather[0].icon));
   } catch (error) {
     if (error?.response?.status === 404) {
       printError('City not found');
@@ -62,15 +63,9 @@ const getForcast = async () => {
 const startCLI = () => {
   const args = getArgs(process.argv);
 
-  if (args.h) {
-    return printHelp();
-  }
-  if (args.s) {
-    return saveCity(args.s);
-  }
-  if (args.t) {
-    return saveToken(args.t);
-  }
+  if (args.h) return printHelp();
+  if (args.s) return saveCity(args.s);
+  if (args.t) return saveToken(args.t);
 
   return getForcast();
 };
